@@ -760,6 +760,38 @@ class Diverging(Colormap):
         super(Diverging, self).__init__(colors)
 
 
+class HiloColormap(BaseColormap):
+    colors = [(0.0, 0.0, 1.0, 1.0),
+              (0.0, 0.0, 0.0, 1.0),
+              (1.0, 1.0, 1.0, 1.0),
+              (1.0, 0.0, 0.0, 1.0)]
+    glsl_map = """
+    vec4 hilo(float t) {
+        if (t == 0.00000000000000000000000000000) {
+            return vec4($color_0); 
+        } else if (t == 1.000000000000000000000000) {
+            return vec4($color_3); 
+        } else {
+            return mix($color_1, $color_2, t); 
+        }
+    }
+    """
+
+    def map(self, t):
+        blue, white, black, red = self.colors.rgba
+        if isinstance(t, np.ndarray):
+            rgba = _mix_simple(white, black, t)
+            rgba[t[:,0] == 0.00000000000000000000000000000,:] = [0.0, 0.0, 1.0, 1.0]
+            rgba[t[:,0] == 1.00000000000000000000000000000,:] = [1.0, 0.0, 0.0, 1.0]
+            return rgba
+        else:
+            if t == 0.00000000000000000000000000:
+                return np.array([0, 0, 1, 1], dtype=np.float32)
+            elif t == 1.00000000000000000000000000000:
+                return np.array([1, 0, 0, 1], dtype=np.float32)
+            else:
+                return _mix_simple(white, black, t)
+
 class RedYellowBlueCyan(Colormap):
     """A colormap which goes red-yellow positive and blue-cyan negative
 
@@ -1089,6 +1121,7 @@ _colormaps = dict(
     husl=HSLuv(),
     diverging=Diverging(),
     RdYeBuCy=RedYellowBlueCyan(),
+    HiLo=HiloColormap(),
 )
 
 

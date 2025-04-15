@@ -22,3 +22,5 @@
 #include "colormaps/reds.glsl"
 #include "colormaps/blues.glsl"
 #include "colormaps/greens.glsl"
+
+#include "colormaps/hilo.glsl"

@@ -302,6 +302,11 @@ def test_colormap_discrete():
     assert_allclose(cm[1].rgba, [[0, 0, 1, 1]], 1e-6, 1e-6)
     assert_allclose(cm[2].rgba, [[0, 0, 1, 1]], 1e-6, 1e-6)
 
+def test_lala():
+    hilo = get_colormap('HiLo')
+    Function(hilo.glsl_map)
+    colors = hilo[np.linspace(-2., 2., 50)]
+    print()
 
 def test_colormap():
     """Test named colormaps."""
